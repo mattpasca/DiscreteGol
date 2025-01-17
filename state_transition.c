@@ -17,8 +17,8 @@ int toroidal_wrap(int row, int row_shift, int col, int col_shift){
 	return DIM*index_wrap(row, row_shift) + index_wrap(col, col_shift);
 }
 
-double* state_transition(double* matrix, int DIM){
-        double* result_matrix;
+int* state_transition(int* matrix, int DIM){
+        int* result_matrix;
         result_matrix = calloc(DIM*DIM, sizeof(double));
         int living_neighbors;   // count of the living neighbors
         int row, col; // indices to go through each cell
