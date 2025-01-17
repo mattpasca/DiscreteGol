@@ -3,7 +3,6 @@
  *
  * ISSUES:
  * Where do you define DIM? Maybe define it global here and pass the value through python
- * When can we free the matrix?
  * How do we pass results to python?
  *
  * Compiler: gcc -shared -o state_transition.so -fPIC state_transition.c 
@@ -47,6 +46,10 @@ double* state_transition(double* matrix, int DIM){
         }
 return result_matrix;
 
+}
+
+void free_matrix(int* matrix){
+    free(matrix);
 }
 
 /*   __________
