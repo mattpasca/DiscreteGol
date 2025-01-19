@@ -9,17 +9,17 @@
  */
 #include <stdlib.h>
 
-int index_wrap(int index, int index_shift){
+int index_wrap(int index, int index_shift, DIM){
 	return (DIM+(index+index_shift)%DIM)%DIM;
 }
 
-int toroidal_wrap(int row, int row_shift, int col, int col_shift){
-	return DIM*index_wrap(row, row_shift) + index_wrap(col, col_shift);
+int toroidal_wrap(int row, int row_shift, int col, int col_shift, DIM){
+	return DIM*index_wrap(row, row_shift, DIM) + index_wrap(col, col_shift, DIM);
 }
 
 int* state_transition(int* matrix, int DIM){
         int* result_matrix;
-        result_matrix = calloc(DIM*DIM, sizeof(double));
+        result_matrix = calloc(DIM*DIM, sizeof(int));
         int living_neighbors;   // count of the living neighbors
         int row, col; // indices to go through each cell
         int row_shift, col_shift; // auxiliary variables to select the neighboring cells
@@ -29,7 +29,7 @@ int* state_transition(int* matrix, int DIM){
             for(col=0; col<DIM; ++col){
                 for(row_shift=-1; row_shift<2; ++row_shift){
                     for(col_shift=-1; col_shift<2; ++col_shift){
-                        wrapped_index = toroidal_wrap(row, row_shift, col, col_shift);
+                        wrapped_index = toroidal_wrap(row, row_shift, col, col_shift, DIM);
                         living_neighbors += matrix[wrapped_index];
                     }
                 }
