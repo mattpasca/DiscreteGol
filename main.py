@@ -15,7 +15,7 @@ shared_library.free_matrix.argtypes = [ct.POINTER(ct.c_int)]
 shared_library.free_matrix.restype = None
 
 GRID_SIZE = 20
-grid = np.zeros((GRID_SIZE,GRID_SIZE))
+grid = np.zeros((GRID_SIZE,GRID_SIZE), dtype=np.int32)
 
 glider = [
     [0, 1, 0],
@@ -25,7 +25,22 @@ glider = [
 
 grid[0:3,0:3] = glider
 
+grid_ptr = grid.ctypes.data_as(ct.POINTER(ct.c_int))
 
-
-plt.imshow(grid, cmap='gray')
+fig, ax = plt.subplots()
+cax = ax.imshow(grid, cmap='gray')
+plt.ion() 
 plt.show()
+i = 0
+for i in range(100):
+	cax.set_data(grid)
+	plt.draw()
+	plt.pause(0.1)
+	
+	new_grid_ptr = shared_library.state_transition(grid_ptr, GRID_SIZE)
+	
+	grid_ptr = new_grid_ptr
+	grid = np.ctypeslib.as_array(grid_ptr, shape=(GRID_SIZE, GRID_SIZE))
+	
+shared_library.free_matrix(grid_ptr)
+
